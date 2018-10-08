@@ -69,6 +69,10 @@ h3 {
     height: 40px;
 }
 
+.display-none {
+    display: none !important;
+}
+
 /******************* Top Panel  *********************/
 #top-panel-bg {
     top: 0%;
@@ -88,19 +92,18 @@ h3 {
 
 #date {
     margin-top: 6%;
-    margin-left: 5%;
+    margin-left: 35px;
 }
 
 #time {
-    margin-top: 5%;
-    margin-left: 5%;
+    margin-top: 20px;
+    margin-left: 25px;
 }
 
 /******************* Weather  *********************/
 #weather {
     flex-direction: column;
     flex: 1 1 auto;
-
 }
 
 #current-weather {
@@ -122,6 +125,7 @@ h3 {
 #current-temp {
     vertical-align: center;
     font-size: 60px;
+    margin-right: 20px;
 }
 
 #current-icon {
@@ -132,10 +136,11 @@ h3 {
     align: center;
 }
 
-#future-weather {
+#daily-weather {
     flex-direction: row;
     flex-grow: 2;
     align-items: center;
+    padding-right: 15px;
 }
 
 .day-weather {
