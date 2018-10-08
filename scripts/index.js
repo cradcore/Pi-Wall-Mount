@@ -51,7 +51,7 @@ const WEATHER = (function () {
         _getGeocodeURL = () => 'https://api.opencagedata.com/geocode/v1/json?q=' + location + '&key=' + openCageDataKey,
         _getDarkSkyURL = (lat, long) => 'https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkSkyKey + '/' + lat + ',' + long;
 
-    const getWeather = () => {
+    const _getWeather = () => {
         let geocodeURL = _getGeocodeURL();
 
         axios.get(geocodeURL)
@@ -117,13 +117,18 @@ const WEATHER = (function () {
         }
     };
 
+    const updateWeather = () => {
+        _getWeather();
+        setInterval(_getWeather, 1800000);
+    };
+
     return {
-        getWeather
+        updateWeather
     }
 })();
 
 /******** init ***********/
 window.onload = function() {
     DATETIME.updateDateAndTime();
-    WEATHER.getWeather();
+    WEATHER.updateWeather();
 };
