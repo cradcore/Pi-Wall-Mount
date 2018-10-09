@@ -223,6 +223,7 @@ h3 {
     font-size: 18px;
     vertical-align: center;
     text-align: center;
+    flex-direction: column;
 }
 
 .calendar-event-name {
@@ -231,6 +232,7 @@ h3 {
     height: 100%;
     margin-left: 50px;
     transform: translateY(33%);
+    flex-direction: column;
 }
 
 .calendar-event-name > h2 {

@@ -130,26 +130,105 @@ const WEATHER = (function () {
 })();
 
 const CALENDAR = (function () {
-    const url = 'https://calendar.zoho.com/ical/692bec6ab235e89cc81c2f4396550d5114b84a210383773464da795cb50c4317dbb1832fec8c2a872a88ef109692dd25/pvt_675fc46fe4206f6ed2ec22701f676a13dce8d502c3bcbff0ad393afef8c226488cabcad57cbbb1a0';
+    const fileLoc = './iCal.txt';
+    var file,
+        events = [],
+        date;
 
     const _getFile = () => {
-        var request = new XMLHttpRequest();
-        request.open("GET", url);
-        request.onreadystatechange = function () {
-            if (request.readyState === 4 && request.status === 200) {
-                //response handling code
+        let rawFile = new XMLHttpRequest();
+        rawFile.open("GET", fileLoc, false);
+        rawFile.onreadystatechange = function () {
+            if (rawFile.readyState === 4)
+                if (rawFile.status === 200 || rawFile.status == 0)
+                    file = rawFile.responseText;
 
+        }
+        rawFile.send(null);
+    };
 
+    const _parseFile = () => {
+        date = new Date();
+        let rows = file.split("\n");
+        rows.forEach((r, index) => {
+            if (!r.includes("BEGIN:VEVENT")) {
+                return;
             }
-        };
-        request.send(null); // Send the request now
-        console.log(request);
+            let name = rows[index + 1].substring(8),
+                start = rows[index + 3],
+                startTime = '',
+                end = rows[index + 4],
+                endTime = '',
+                loc = rows[index + 5].substring(9);
+            for (let i = 0; i < start.length; i++) {
+                if (!isNaN(start.charAt(i))) {
+                    start = start.substring(i);
+                    break;
+                }
+            }
+            if (start.length > 8) {
+                startTime = start.substring(8, 11) + ":" + start.substring(11, 13) + ":" + start.substring(13, 15) + "Z";
+            }
+            start = start.substring(0, 4) + "-" + start.substring(4, 6) + "-" + start.substring(6, 8);
+            for (let i = 0; i < end.length; i++) {
+                if (!isNaN(end.charAt(i))) {
+                    end = end.substring(i);
+                    break;
+                }
+            }
+            if (end.length > 8) {
+                endTime = end.substring(8, 11) + ":" + end.substring(11, 13) + ":" + end.substring(13, 15) + "Z";
+            }
+            end = end.substring(0, 4) + "-" + end.substring(4, 6) + "-" + end.substring(6, 8);
+            let event = {
+                name: name,
+                start: new Date(start + startTime),
+                end: new Date(end + endTime),
+                loc: loc
+            };
+            if (event.end >= date)
+                events.push(event);
+        });
+    };
 
+    const _sortEvents = () => {
+        function compare(a, b) {
+            if (a.start < b.start)
+                return -1;
+            if (a.start > b.start)
+                return 1;
+            return 0;
+        }
+        events.sort(compare);
+    };
+
+    const _drawCalendar = () => {
+        const eventContainer = document.querySelector("#calendar"),
+            daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'],
+            months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        while(eventContainer.children[1] != null) {
+            eventContainer.children[1].remove();
+        }
+        for(let i = 0; i < events.length; i++) {
+            let eventWrapper = eventContainer.children[0].cloneNode(true),
+                event = events[i];
+            eventWrapper.classList.remove('display-none');
+            eventWrapper.children[0].children[0].innerHTML = daysOfWeek[event]
+
+
+
+            eventContainer.appendChild(eventWrapper);
+        }
     };
 
     const updateCalendar = () => {
         _getFile();
+        _parseFile();
+        _sortEvents();
+        _drawCalendar();
     };
+
+
 
     return {
         updateCalendar
@@ -159,6 +238,6 @@ const CALENDAR = (function () {
 /******** init ***********/
 window.onload = function () {
     DATETIME.updateDateAndTime();
-    WEATHER.updateWeather();
+    // WEATHER.updateWeather();
     CALENDAR.updateCalendar();
 };
