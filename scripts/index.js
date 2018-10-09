@@ -16,7 +16,7 @@ const DATETIME = (function () {
         d = new Date();
         let timeString = '';
         let end = '';
-        if(d.getHours() > 12) {
+        if (d.getHours() > 12) {
             timeString += d.getHours() % 12;
             end = 'PM';
         } else {
@@ -24,7 +24,7 @@ const DATETIME = (function () {
             end = 'AM';
         }
         timeString += ':';
-        if(d.getMinutes() < 10)
+        if (d.getMinutes() < 10)
             timeString += '0' + d.getMinutes();
         else timeString += d.getMinutes();
         timeString += ' ' + end;
@@ -105,8 +105,10 @@ const WEATHER = (function () {
         const dailyWeatherWrapper = document.querySelector("#daily-weather"),
             daysOfWeek = ['Su', 'M', 'T', 'W', 'Th', 'F', 'Sa'],
             d = new Date();
-        console.log(data.daily.data);
-        for(let i = 1; i < 8; i++) {
+        while (dailyWeatherWrapper.children[1] != null) {
+            dailyWeatherWrapper.children[1].remove();
+        }
+        for (let i = 0; i < 7; i++) {
             let dailyWeather = dailyWeatherWrapper.children[0].cloneNode(true);
             dailyWeather.classList.remove('display-none');
             dailyWeather.children[0].innerHTML = daysOfWeek[(d.getDay() + i) % 7];
@@ -127,8 +129,36 @@ const WEATHER = (function () {
     }
 })();
 
+const CALENDAR = (function () {
+    const url = 'https://calendar.zoho.com/ical/692bec6ab235e89cc81c2f4396550d5114b84a210383773464da795cb50c4317dbb1832fec8c2a872a88ef109692dd25/pvt_675fc46fe4206f6ed2ec22701f676a13dce8d502c3bcbff0ad393afef8c226488cabcad57cbbb1a0';
+
+    const _getFile = () => {
+        var request = new XMLHttpRequest();
+        request.open("GET", url);
+        request.onreadystatechange = function () {
+            if (request.readyState === 4 && request.status === 200) {
+                //response handling code
+
+
+            }
+        };
+        request.send(null); // Send the request now
+        console.log(request);
+
+    };
+
+    const updateCalendar = () => {
+        _getFile();
+    };
+
+    return {
+        updateCalendar
+    }
+})();
+
 /******** init ***********/
-window.onload = function() {
+window.onload = function () {
     DATETIME.updateDateAndTime();
     WEATHER.updateWeather();
+    CALENDAR.updateCalendar();
 };
