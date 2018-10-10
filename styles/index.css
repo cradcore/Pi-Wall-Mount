@@ -4,6 +4,7 @@ html, body, main {
     height: 100%;
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }
 
 body {
@@ -164,12 +165,12 @@ h3 {
 /******************* Bottom Panel  *********************/
 #bottom-panel-bg {
     bottom: 0%;
-    box-shadow: 0px -170px 90vw 40vw rgba(0, 0, 0, .8);
+    box-shadow: 0px -200px 100vw 40vw rgba(0, 0, 0, .8);
 }
 
 #calendar {
     position: absolute;
-    bottom: 100%;
+    bottom: 0;
     left: 5%;
     flex-direction: column;
     width: 90%;
@@ -179,19 +180,20 @@ h3 {
 
 .calendar-event {
     flex-direction: row;
-    padding-bottom: 15px;
     border-top: 3px solid rgba(255, 255, 255, .2);
     vertical-align: center;
     align-items: center;
     width: 100%;
-    margin-top: auto;
-    padding-top: 15px;
+    margin-top: 5px;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .calendar-date {
     flex-direction: column;
     flex-grow: 1;
-    width: 10%;
+    width: 15%;
+    height: 100%;
     vertical-align: center;
     margin-left: 20px;
     align: center;
@@ -199,12 +201,11 @@ h3 {
 }
 
 .calendar-date > h2 {
-    font-size: 30px;
-    margin-bottom: 5px;
+    font-size: 20px;
 }
 
 .calendar-date > h3 {
-    font-size: 20px;
+    font-size: 15px;
 }
 
 .calendar-time {
@@ -214,19 +215,32 @@ h3 {
     text-align: center;
     vertical-align: center;
     margin-left: 20px;
+    transform: translateY(33%);
+    flex-direction: column;
 }
 
 .calendar-time > h2 {
-    font-size: 20px;
+    flex-grow: 1;
+    font-size: 18px;
     vertical-align: center;
+    text-align: center;
 }
 
 .calendar-event-name {
     flex-grow: 5;
-    width: 75%;
+    width: 70%;
+    height: 100%;
     margin-left: 50px;
+    transform: translateY(33%);
+    flex-direction: column;
 }
 
 .calendar-event-name > h2 {
-    font-size: 25px;
+    font-size: 18px;
+}
+
+iframe {
+    position: absolute;
+    left: 0;
+    bottom: 0;
 }
