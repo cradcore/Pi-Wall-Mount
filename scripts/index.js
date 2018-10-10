@@ -304,9 +304,27 @@ const CALENDAR = (function () {
     }
 })();
 
+const BACKGROUND = (function () {
+
+    const _updateBackground = () => {
+        let num = (Math.round(Math.random() * 100) % 16) + 1;
+        const bg = document.querySelector(".background");
+        bg.style.backgroundImage = "url('images/bg/bg-" + num + ".jpg')";
+    };
+
+    const randomlyUpdate = () => {
+        setInterval(_updateBackground, 86400000);
+    };
+
+    return {
+        randomlyUpdate
+    }
+})();
+
 /******** init ***********/
 window.onload = function () {
     DATETIME.updateDateAndTime();
     WEATHER.updateWeather();
     CALENDAR.updateCalendarContinuously();
+    BACKGROUND.randomlyUpdate();
 };
