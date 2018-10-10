@@ -29,6 +29,10 @@ body {
     background-repeat: no-repeat;
     opacity: .75;
     z-index: 1;
+    -webkit-transition: background-image 1s ease-in-out;
+    -moz-transition: background-image 1s ease-in-out;
+    -o-transition: background-image 1s ease-in-out;
+    transition: background-image 1s ease-in-out;
 }
 
 .flex-container {
