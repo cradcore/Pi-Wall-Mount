@@ -16,7 +16,7 @@ const DATETIME = (function () {
         d = new Date();
         let timeString = '';
         let end = '';
-        if (d.getHours() > 12) {
+        if (d.getHours() >= 12) {
             timeString += d.getHours() % 12;
             end = 'PM';
         } else {
