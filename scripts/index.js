@@ -133,7 +133,8 @@ const CALENDAR = (function () {
     const fileLoc = './iCal.txt';
     var file,
         events = [],
-        date;
+        date,
+        drawableEvents = [];
 
     const _getFile = () => {
         let rawFile = new XMLHttpRequest();
@@ -192,31 +193,94 @@ const CALENDAR = (function () {
     };
 
     const _sortEvents = () => {
-        function compare(a, b) {
+        function eventsCompare(a, b) {
             if (a.start < b.start)
                 return -1;
             if (a.start > b.start)
                 return 1;
             return 0;
         }
-        events.sort(compare);
+
+        events.sort(eventsCompare);
+        for (let i = 0; i < events.length; i++) {
+            let len = events[i].end.getDate() - events[i].start.getDate(),
+                d = events[i].start;
+            if (len > 0)
+                d = new Date(d.toDateString());
+            let e = {
+                date: d,
+                loc: events[i].loc,
+                name: events[i].name
+            };
+            drawableEvents.push(e);
+            for (let j = 1; j <= len; j++) {
+                let d = events[i].start.getTime() + (j * (60 * 60 * 24 * 1000))
+                e = {
+                    date: new Date(new Date(d).toDateString()),
+                    loc: events[i].loc,
+                    name: events[i].name
+                };
+                drawableEvents.push(e);
+            }
+        }
+
+        function drawableEventsCompare(a, b) {
+            if (a.date < b.date)
+                return -1;
+            if (a.date > b.date)
+                return 1;
+            return 0;
+        }
+
+        drawableEvents.sort(drawableEventsCompare);
     };
 
     const _drawCalendar = () => {
         const eventContainer = document.querySelector("#calendar"),
             daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat'],
             months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        while(eventContainer.children[1] != null) {
+        while (eventContainer.children[1] != null) {
             eventContainer.children[1].remove();
         }
-        for(let i = 0; i < events.length; i++) {
+        for (let i = 0; i < drawableEvents.length; i++) {
             let eventWrapper = eventContainer.children[0].cloneNode(true),
-                event = events[i];
+                event = drawableEvents[i];
             eventWrapper.classList.remove('display-none');
-            eventWrapper.children[0].children[0].innerHTML = daysOfWeek[event]
-
-
-
+            eventWrapper.children[0].children[0].innerHTML = daysOfWeek[drawableEvents[i].date.getDay()];
+            eventWrapper.children[0].children[1].innerHTML = months[drawableEvents[i].date.getMonth()] + ' ' + drawableEvents[i].date.getDate();
+            let times = [],
+                names = [],
+                currDate = drawableEvents[i].date.getDate();
+            while (true) {
+                times.push(drawableEvents[i].date.toTimeString());
+                names.push(drawableEvents[i].name);
+                if(i + 1 < drawableEvents.length && drawableEvents[i + 1].date.getDate() == currDate)
+                    i++;
+                else break;
+            }
+            while(eventWrapper.children[1].children[1] != null) {
+                eventWrapper.children[1].children[1].remove();
+            }
+            for(let j = 0; j < times.length; j++) {
+                let timeWrapper = eventWrapper.children[1].children[0].cloneNode(true);
+                timeWrapper.classList.remove('display-none');
+                if(parseInt(times[j].substring(0,2)) > 12) {
+                    timeWrapper.innerHTML = parseInt(times[j].substring(0,2)) % 12 + times[j].substring(2, 5) + ' PM';
+                }
+                else timeWrapper.innerHTML = times[j].substring(0, 5);
+                if(times[j].substring(0,5) == '00:00')
+                    timeWrapper.innerHTML = "All Day";
+                eventWrapper.children[1].appendChild(timeWrapper);
+            }
+            while(eventWrapper.children[2].children[1] != null) {
+                eventWrapper.children[2].children[1].remove();
+            }
+            for(let j = 0; j < names.length; j++) {
+                let namesWrapper = eventWrapper.children[2].children[0].cloneNode(true);
+                namesWrapper.classList.remove('display-none');
+                namesWrapper.innerHTML = names[j];
+                eventWrapper.children[2].appendChild(namesWrapper);
+            }
             eventContainer.appendChild(eventWrapper);
         }
     };
@@ -227,7 +291,6 @@ const CALENDAR = (function () {
         _sortEvents();
         _drawCalendar();
     };
-
 
 
     return {
