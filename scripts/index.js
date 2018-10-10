@@ -285,22 +285,26 @@ const CALENDAR = (function () {
         }
     };
 
-    const updateCalendar = () => {
+    const _updateCalendar = () => {
         _getFile();
         _parseFile();
         _sortEvents();
         _drawCalendar();
     };
 
+    const updateCalendarContinuously = () => {
+        _updateCalendar();
+        setInterval(_updateCalendar, 3600000);
+    }
 
     return {
-        updateCalendar
+        updateCalendarContinuously
     }
 })();
 
 /******** init ***********/
 window.onload = function () {
     DATETIME.updateDateAndTime();
-    // WEATHER.updateWeather();
-    CALENDAR.updateCalendar();
+    WEATHER.updateWeather();
+    CALENDAR.updateCalendarContinuously();
 };
