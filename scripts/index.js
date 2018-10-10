@@ -282,6 +282,8 @@ const CALENDAR = (function () {
                 eventWrapper.children[2].appendChild(namesWrapper);
             }
             eventContainer.appendChild(eventWrapper);
+            if(eventContainer.children.length > 5)
+                return;
         }
     };
 
