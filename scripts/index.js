@@ -137,6 +137,12 @@ const CALENDAR = (function () {
         drawableEvents = [];
 
     const _getFile = () => {
+        while(drawableEvents.length > 0) {
+            drawableEvents.pop();
+        }
+        while(events.length > 0) {
+            events.pop();
+        }
         let rawFile = new XMLHttpRequest();
         rawFile.open("GET", fileLoc, false);
         rawFile.onreadystatechange = function () {
@@ -292,6 +298,7 @@ const CALENDAR = (function () {
         _parseFile();
         _sortEvents();
         _drawCalendar();
+        console.log("UPDATED");
     };
 
     const updateCalendarContinuously = () => {
