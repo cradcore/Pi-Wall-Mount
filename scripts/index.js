@@ -320,6 +320,7 @@ const BACKGROUND = (function () {
     };
 
     const randomlyUpdate = () => {
+        _updateBackground();
         setInterval(_updateBackground, 86400000);
     };
 
